@@ -8,6 +8,7 @@ const postSchema = new mongoose.Schema({
   link: String,
   pubDate: String,
   content: String,
+  imageLink: String,
   guid: String,
   categories: Array,
 });

@@ -1,9 +1,17 @@
 const Post = require("../db/models/Post.model");
 const parseAllFeeds = require("../parser/rssParser");
+const htmlParser = require("node-html-parser")
 
 const isNewFeeds = (idFromDb, idFromSource) => {
   return idFromDb !== idFromSource;
 };
+
+const extractImageLink = (content) => {
+  const contentFromRss = htmlParser.parse(content);
+  const srcString = contentFromRss.childNodes[0].rawAttrs
+    .replace("src=", '"', "")
+  return srcString.substring(2, srcString.length - 2);
+}
 
 const updateFeeds = async () => {
   const rssFeeds = await parseAllFeeds();
@@ -23,7 +31,8 @@ const updateFeeds = async () => {
           title,
           pubDate: date.toISOString(),
           link,
-          content,
+          imageLink: extractImageLink(content),
+          content: feed.contentSnippet.replace("Read more...", ""),
           guid,
           categories,
         });
