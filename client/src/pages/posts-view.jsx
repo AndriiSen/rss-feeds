@@ -8,6 +8,7 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
   ArrowUpDownIcon,
+  AddIcon,
 } from "@chakra-ui/icons";
 import { Text, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
@@ -22,21 +23,22 @@ export const PostsView = () => {
   const [isLastPage, setIsLastPage] = useState(false);
   const navigate = useNavigate();
 
-  const fetchFeeds = useCallback(async () => {
-    try {
-      const token = window.localStorage.getItem("token");
-      const result = await axios.get("http://localhost:8000/post",
-        {
-          params: { searchQuery, page },
+  const fetchFeeds = useCallback(
+    async () => {
+      try {
+        const token = window.localStorage.getItem("token");
+        const result = await axios.get("http://localhost:8000/post", {
+          params: { searchQuery, page},
           headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setItems(result.data.posts);
-      setIsLastPage(result.data.isLastPage);
-    } catch (e) {
-      navigate("/login");
-    }
-  }, [page, searchQuery, navigate]);
+        });
+        setItems(result.data.posts);
+        setIsLastPage(result.data.isLastPage);
+      } catch (e) {
+        navigate("/login");
+      }
+    },
+    [page, searchQuery, navigate]
+  );
 
   const handleNext = () => {
     setPage((prev) => (isLastPage ? prev : prev + 1));
@@ -57,13 +59,23 @@ export const PostsView = () => {
   return (
     <Flex justifyContent='center' alignItems='center'>
       <Box>
-        <Input
-          mt='5px'
+        <Flex
+          alignItems='center'
+          justifyContent='space-between'
+          mt='10px'
           mb='10px'
-          placeholder='Search title'
-          type='text'
-          onChange={(e) => handleSearch(e.target.value)}
-        />
+        >
+          <Input
+            maxWidth='300px'
+            placeholder='Search title'
+            type='text'
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <Button rightIcon={<AddIcon />} colorScheme='green'>
+            Add new
+          </Button>
+        </Flex>
+
         <Flex alignItems='center' mb='10px' justifyContent='space-between'>
           <Flex alignItems='center'>
             {page > 0 && (
@@ -90,7 +102,7 @@ export const PostsView = () => {
                 Sort by
               </MenuButton>
               <MenuList>
-                <MenuItem> Date</MenuItem>
+                <MenuItem>Date</MenuItem>
               </MenuList>
             </Menu>
           </Box>

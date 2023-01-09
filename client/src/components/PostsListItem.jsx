@@ -17,8 +17,6 @@ export const PostsListItem = ({ item, fetchFeeds }) => {
   const [newContent, setNewContent] = useState(content);
 
   const date = new Date(pubDate);
-  console.log(date.toLocaleString().split(",")[0]);
-  console.log();
 
   const handleDelete = async () => {
     const token = window.localStorage.getItem("token");
