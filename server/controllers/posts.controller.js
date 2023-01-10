@@ -1,25 +1,29 @@
 const Post = require("../db/models/Post.model");
 const { v4 } = require("uuid");
 
+
 exports.getAllPosts = async (req, res) => {
-  const { sortBy, isDescendingOrder, filterBy, searchQuery, page } = req.query;
+  const { sortBy, sortCondition, filterCategory, searchQuery, page } = req.query;
+  const filter = filterCategory ? {categories: filterCategory} : null
   const skip = page * 5;
-  const limit = 10;
+  const limit = 5;
   const posts = await Post.find({
+    ...filter,
     available: true,
     title: {
       $regex: searchQuery || "",
       $options: "i",
     },
   })
+    .sort({ [sortBy]: sortCondition })
     .skip(skip)
     .limit(limit);
-  const isLastPage = posts.length < 10;
+  const isLastPage = posts.length < limit;
   res.send({ posts, isLastPage });
 };
 
 exports.addNewPost = async (req, res) => {
-  const { creator, title, link, content, categories } = req.body;
+  const { creator, title, imageLink, content, categories } = req.body;
   const date = new Date();
   try {
     const post = new Post({
@@ -27,7 +31,7 @@ exports.addNewPost = async (req, res) => {
       available: true,
       creator,
       title,
-      link,
+      imageLink,
       pubDate: date.toISOString(),
       content,
       guid: v4(),

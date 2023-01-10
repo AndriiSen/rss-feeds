@@ -1,6 +1,6 @@
 const Post = require("../db/models/Post.model");
 const parseAllFeeds = require("../parser/rssParser");
-const htmlParser = require("node-html-parser")
+const htmlParser = require("node-html-parser");
 
 const isNewFeeds = (idFromDb, idFromSource) => {
   return idFromDb !== idFromSource;
@@ -8,10 +8,12 @@ const isNewFeeds = (idFromDb, idFromSource) => {
 
 const extractImageLink = (content) => {
   const contentFromRss = htmlParser.parse(content);
-  const srcString = contentFromRss.childNodes[0].rawAttrs
-    .replace("src=", '"', "")
-  return srcString.substring(2, srcString.length - 2);
-}
+  const srcString = contentFromRss.childNodes[0].rawAttrs;
+  const expression =
+    /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi;
+
+  return srcString.match(expression)[0];
+};
 
 const updateFeeds = async () => {
   const rssFeeds = await parseAllFeeds();
@@ -40,8 +42,9 @@ const updateFeeds = async () => {
       }
     });
   }
-
+  
   return;
 };
+
 
 module.exports = updateFeeds;
