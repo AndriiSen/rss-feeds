@@ -1,10 +1,10 @@
 const Post = require("../db/models/Post.model");
 const { v4 } = require("uuid");
 
-
 exports.getAllPosts = async (req, res) => {
-  const { sortBy, sortCondition, filterCategory, searchQuery, page } = req.query;
-  const filter = filterCategory ? {categories: filterCategory} : null
+  const { sortBy, sortCondition, filterCategory, searchQuery, page } =
+    req.query;
+  const filter = filterCategory ? { categories: filterCategory } : null;
   const skip = page * 5;
   const limit = 5;
   const posts = await Post.find({

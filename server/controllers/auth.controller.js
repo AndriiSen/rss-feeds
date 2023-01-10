@@ -52,7 +52,7 @@ exports.login = async (req, res) => {
         process.env.TOKEN_KEY
       );
 
-      res.json(user);
+      res.json(token);
     } else {
       res.send("Invalid Credentials");
     }

@@ -1,11 +1,11 @@
 import axios from "axios";
+import API from "../api/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Flex } from "@chakra-ui/layout";
 import { Input } from "@chakra-ui/react";
 import { Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
-
 
 export const LoginView = () => {
   const [email, setEmail] = useState("");
@@ -20,13 +20,11 @@ export const LoginView = () => {
   };
 
   const handleLogin = async () => {
-    const result = await axios.post("http://localhost:8000/login",
-      {
-        email,
-        password,
-      }
-    );
-    window.localStorage.setItem("token", result.data.token);
+    const result = await API.post("/login", {
+      email,
+      password,
+    });
+    window.localStorage.setItem("token", result.data);
     navigate("/");
   };
 
@@ -48,7 +46,9 @@ export const LoginView = () => {
           />
         </CardBody>
         <CardFooter>
-          <Button mr="10px" onClick={handleLogin}>Login</Button>
+          <Button mr='10px' onClick={handleLogin}>
+            Login
+          </Button>
           <Button onClick={() => navigate("/register")}> Register </Button>
         </CardFooter>
       </Card>

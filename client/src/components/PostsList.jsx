@@ -3,9 +3,19 @@ import { PostsListItem } from "./PostsListItem";
 
 export const PostsList = ({ items, fetchFeeds, setFilterCategory }) => {
   return (
-    <Flex flexDirection="column" alignItems="center" justifyContent="center" maxWidth="800px">
+    <Flex
+      flexDirection='column'
+      alignItems='center'
+      justifyContent='center'
+      maxWidth='800px'
+    >
       {items.map((item) => (
-        <PostsListItem item={item} key={item.guid} fetchFeeds={fetchFeeds} setFilterCategory={setFilterCategory}/>
+        <PostsListItem
+          item={item}
+          key={item.guid}
+          fetchFeeds={fetchFeeds}
+          setFilterCategory={setFilterCategory}
+        />
       ))}
     </Flex>
   );

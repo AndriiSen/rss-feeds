@@ -7,6 +7,7 @@ import { Input } from "@chakra-ui/react";
 import { Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api/api";
 
 export const NewPostView = () => {
   const [imageLink, setImageLink] = useState();
@@ -17,12 +18,13 @@ export const NewPostView = () => {
 
   const handleAddNew = async () => {
     try {
-      const token = window.localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:8000/post",
+      await API.post(
+        "/post",
         { imageLink, title, content, creator },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+          },
         }
       );
       navigate("/");

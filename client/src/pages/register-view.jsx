@@ -1,4 +1,5 @@
 import axios from "axios";
+import API from "../api/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Flex } from "@chakra-ui/layout";
@@ -15,7 +16,7 @@ export const RegisterView = () => {
 
   const registerNewUser = async () => {
     if (firstName && lastName && email && password) {
-      const result = await axios.post("http://localhost:8000/register", {
+      const result = await API.post("/register", {
         firstName,
         lastName,
         email,

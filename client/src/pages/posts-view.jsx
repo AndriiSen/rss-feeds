@@ -1,10 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import API from "../api/api";
 import { PostsList } from "../components/PostsList";
 import { useNavigate } from "react-router-dom";
 import { Flex, Box } from "@chakra-ui/layout";
-import { IconButton, Button, Tag, TagLabel,
-  TagLeftIcon} from "@chakra-ui/react";
+import {
+  IconButton,
+  Button,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+} from "@chakra-ui/react";
 import {
   ChevronRightIcon,
   ChevronLeftIcon,
@@ -23,32 +29,31 @@ export const PostsView = () => {
   const [page, setPage] = useState(0);
   const [isLastPage, setIsLastPage] = useState(false);
   const [sortCondition, setSortCondition] = useState(-1);
-  const [sortBy,setSortBy] = useState('pubDate')
-  const [filterCategory, setFilterCategory] = useState()
+  const [sortBy, setSortBy] = useState("pubDate");
+  const [filterCategory, setFilterCategory] = useState();
   const navigate = useNavigate();
-
 
   const fetchFeeds = useCallback(async () => {
     try {
-      const token = window.localStorage.getItem("token");
-      const result = await axios.get("http://localhost:8000/post", {
+      const result = await API.get("/post", {
         params: { searchQuery, page, sortCondition, sortBy, filterCategory },
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        },
       });
       setItems(result.data.posts);
-      console.log(result.data.posts.map((el) => el.pubDate));
       setIsLastPage(result.data.isLastPage);
     } catch (e) {
-      if (e.response.status === 401) {
+      if (e.response?.status === 401) {
         navigate("/login");
       }
     }
   }, [page, searchQuery, navigate, sortCondition, sortBy, filterCategory]);
 
   const handleSort = (propertyName, direction) => {
-    setSortBy(propertyName)
-    setSortCondition(direction)
-  }
+    setSortBy(propertyName);
+    setSortCondition(direction);
+  };
 
   const handleNext = () => {
     setPage((prev) => (isLastPage ? prev : prev + 1));
@@ -109,12 +114,16 @@ export const PostsView = () => {
                 icon={<ChevronRightIcon />}
               ></IconButton>
             )}
-          </Flex >
+          </Flex>
           {filterCategory && (
-              <Tag heigth='10px' variant='subtle' onClick={()=> setFilterCategory()}>
-                <TagLeftIcon boxSize='12px' as={CloseIcon} />
-                <TagLabel>{filterCategory}</TagLabel>
-              </Tag>
+            <Tag
+              heigth='10px'
+              variant='subtle'
+              onClick={() => setFilterCategory()}
+            >
+              <TagLeftIcon boxSize='12px' as={CloseIcon} />
+              <TagLabel>{filterCategory}</TagLabel>
+            </Tag>
           )}
           <Box>
             <Menu>

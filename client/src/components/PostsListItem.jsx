@@ -1,5 +1,6 @@
 import { Card, CardBody, CardFooter } from "@chakra-ui/card";
 import { Image } from "@chakra-ui/image";
+import API from "../api/api";
 import { Stack, Text, Heading } from "@chakra-ui/layout";
 import { Button, IconButton } from "@chakra-ui/button";
 import { Link } from "@chakra-ui/react";
@@ -14,12 +15,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Input } from "@chakra-ui/react";
 import { Textarea } from "@chakra-ui/react";
-import {
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Flex,
-} from "@chakra-ui/react";
+import { Tag, TagLabel, TagLeftIcon, Flex } from "@chakra-ui/react";
 
 export const PostsListItem = ({ item, fetchFeeds, setFilterCategory }) => {
   const { categories, imageLink, link, title, content, creator, pubDate, _id } =
@@ -31,20 +27,22 @@ export const PostsListItem = ({ item, fetchFeeds, setFilterCategory }) => {
   const date = new Date(pubDate);
 
   const handleDelete = async () => {
-    const token = window.localStorage.getItem("token");
-    await axios.delete(`http://localhost:8000/post/${_id}`, {
-      headers: { Authorization: `Bearer ${token}` },
+    await API.delete(`/post/${_id}`, {
+      headers: {
+        Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+      },
     });
     fetchFeeds();
   };
 
   const handleUpdate = async () => {
-    const token = window.localStorage.getItem("token");
-    await axios.put(
-      `http://localhost:8000/post/${_id}`,
+    await API.put(
+      `/post/${_id}`,
       { title: newTitle, content: newContent },
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${window.localStorage.getItem("token")}`,
+        },
       }
     );
     setIsEditMode(false);
